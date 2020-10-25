@@ -51,8 +51,9 @@ namespace Bicep.LanguageServer.Completions
             var kind = ConvertFlag(IsDeclarationStartContext(matchingNodes, offset), BicepCompletionContextKind.DeclarationStart) |
                        GetDeclarationTypeFlags(matchingNodes, offset) |
                        ConvertFlag(IsPropertyNameContext(matchingNodes, out var @object), BicepCompletionContextKind.PropertyName) |
-                       ConvertFlag(IsPropertyValueContext(matchingNodes, out var property), BicepCompletionContextKind.PropertyValue) |
-                       ConvertFlag(IsArrayItemContext(matchingNodes, out var array), BicepCompletionContextKind.ArrayItem);
+                       ConvertFlag(IsPropertyValueContext(matchingNodes, out var property), BicepCompletionContextKind.PropertyValue | BicepCompletionContextKind.Expression) |
+                       ConvertFlag(IsArrayItemContext(matchingNodes, out var array), BicepCompletionContextKind.ArrayItem | BicepCompletionContextKind.Expression) |
+                       ConvertFlag(IsExpressionContext(matchingNodes), BicepCompletionContextKind.Expression);
 
             // the check at the beginning guarantees we have at least 1 node
             var replacementRange = GetReplacementRange(syntaxTree, matchingNodes[^1], offset);
@@ -322,6 +323,8 @@ namespace Bicep.LanguageServer.Completions
 
             return false;
         }
+
+        private static bool IsExpressionContext(List<SyntaxBase> matchingNodes) => matchingNodes.OfType<ExpressionSyntax>().Any();
 
         private static TResult? FindLastNodeOfType<TPredicate, TResult>(List<SyntaxBase> matchingNodes, out int index) where TResult : SyntaxBase
         {

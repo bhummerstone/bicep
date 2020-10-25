@@ -28,9 +28,9 @@ namespace Bicep.LanguageServer.Completions
         OutputType = 1 << 2,
 
         /// <summary>
-        /// The current location needs a value (variable, expression, function call, etc.)
+        /// The current location needs an expression
         /// </summary>
-        Value = 1 << 3,
+        Expression = 1 << 3,
 
         /// <summary>
         /// The current location needs a property name. 
